@@ -1,0 +1,13 @@
+table, th, td {
+    border: 1px solid black;
+    text-align: center;
+}
+
+table {
+    width: 200px;
+}
+
+td.match {
+    color: red;
+    font-weight: bold;
+}
