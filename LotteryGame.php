@@ -7,6 +7,7 @@ class LotteryGame
     private int $quantity;
     private array $result;
     private array $bets;
+    private array $winners;
 
     /**
      * @param int $length
@@ -149,28 +150,45 @@ class LotteryGame
         echo "<h2>Resultados</h2>";
         echo "<table>";
 
-        echo $this->addRow($this->result, true);
+        echo $this->addRow($this->result, true, 0);
         echo "</table>";
 
         $bets = $this->getBets();
 
         echo "<h2>Apostas</h2>";
         echo "<table>";
-        foreach ($bets as $bet) {
-            echo '<PRE>';
-            echo $this->addRow($bet, false);
+        foreach ($bets as $key => $bet) {
+            echo $this->addRow($bet, false, $key +1);
         }
-
         echo "</table>";
+        $this->getWinners();
     }
 
-    private function addRow(array $data, bool $isResult)
+    private function getWinners() {
+        $higher = max($this->winners);
+        $winners = "";
+
+        foreach($this->winners as $key => $winner){
+            if($winner === $higher){
+                $winners .= $key . ", ";
+            }
+        }
+
+        echo "<h1>Vencedores: $winners com $higher acertos</h1>";
+    }
+
+    private function addRow(array $data, bool $isResult, $num = 0)
     {
         $row = '<tr>';
-
+        $row .= "<td>" . $num . "</td>";
+        $this->winners['Jogo '.$num] = 0;
         foreach ($data as $item) {
-            $class = (!$isResult && in_array($item, $this->result)) ? 'match' : null;
+            $match = (!$isResult && in_array($item, $this->result));
+            $class = ($match) ? 'match' : null;
             $row .= "<td class='${class}'>$item</td>";
+            if(!$isResult && $match) {
+                $this->winners['Jogo '.$num]++;
+            }
         }
         $row .= '</tr>';
 
